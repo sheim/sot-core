@@ -19,7 +19,7 @@
  */
 
 /* --- SOT --- */
-#include <sot/core/pool.hh>
+#include <dynamic-graph/pool.h>
 #include <sot/core/binary-int-to-uint.hh>
 #include <sot/core/exception-feature.hh>
 #include <sot/core/debug.hh>
@@ -65,16 +65,4 @@ unsigned& BinaryIntToUint::computeOutput( unsigned& res,int time )
 void BinaryIntToUint::display( std::ostream& os ) const
 {
   os << "BinaryIntToUint <" << name << "> TODO..." << endl;
-}
-
-void BinaryIntToUint::
-commandLine( const std::string& cmdLine,
-	     std::istringstream& cmdArgs,
-	     std::ostream& os )
-{
-  if( cmdLine == "help" )
-  {
-    os << "BinaryIntToUint: "<<endl;
-  }
-  else{ Entity::commandLine( cmdLine,cmdArgs,os ); }
 }

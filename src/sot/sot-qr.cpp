@@ -32,7 +32,7 @@ sotSOTQr__INIT sotSOTQr_initiator;
 
 
 #include <sot/core/sot-qr.hh>
-#include <sot/core/pool.hh>
+#include <dynamic-graph/pool.h>
 #include <sot/core/task.hh>
 #include <sot/core/sot.hh>
 #include <sot/core/memory-task-sot.hh>
@@ -295,10 +295,10 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack
 		   bub::vector< int >& jp, bubVector& tau)
   {
     #ifndef NDEBUG
-    const int m = A.size1();
+    const size_t m = A.size1();
     #endif
-    const int n = A.size2();
-    ::boost::numeric::ublas::vector<double> work(std::max(1, n*32));
+    const size_t n = A.size2();
+    ::boost::numeric::ublas::vector<double> work(std::max(1U, n*32));
 
     assert (std::min(m,n) <= tau.size());
     assert (n <= work.size());
@@ -407,7 +407,7 @@ public: // protected:
   double beta;
 
 public:
-  sotHouseholdMatrix( void ) { v.resize(0);}
+  sotHouseholdMatrix( void ) { v.resize(0); beta=0;}
   sotHouseholdMatrix( const unsigned int n )
   { v.resize(n); std::fill(v.begin(),v.end(),0); beta=0;}
   sotHouseholdMatrix( const bubVector& _v, const double& _beta )
@@ -479,6 +479,8 @@ public:
   sotHouseholdMatrices( void ) { matrices.resize(0);}
   sotHouseholdMatrices( const bubMatrix & RQ, const bubVector & betas )
   { this->push_back(RQ,betas);  }
+
+  virtual ~sotHouseholdMatrices( void ) { }
 
   void push_back( const sotHouseholdMatrix& P )
   { matrices.push_back( P ); }
@@ -985,12 +987,6 @@ operator<< ( std::ostream& os,const SotQr& sot )
 /* --------------------------------------------------------------------- */
 /* --- COMMAND --------------------------------------------------------- */
 /* --------------------------------------------------------------------- */
-
-void SotQr::
-commandLine( const std::string& ,std::istringstream& ,
-	     std::ostream&  )
-{
-}
 
 std::ostream& SotQr::
 writeGraph( std::ostream& os ) const
