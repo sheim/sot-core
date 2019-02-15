@@ -58,7 +58,8 @@ ControlPD( const std::string & name )
         "ControlPD("+name+")::output(vector)::control" )
 {
   init(TimeStep);
-  Entity::signalRegistration( KpSIN << KdSIN << positionSIN << desiredpositionSIN << velocitySIN << desiredvelocitySIN << controlSOUT );
+  Entity::signalRegistration( KpSIN << KdSIN << positionSIN << 
+    desiredpositionSIN << velocitySIN << desiredvelocitySIN << controlSOUT );
 }
 
 void ControlPD::
@@ -108,10 +109,14 @@ computeControl( dynamicgraph::Vector &tau, int t )
       
   dynamicgraph::Vector::Index size = Kp.size();   
   tau.resize(size);
+  positionError.resize(size);
+  velocityError.resize(size);
 
-  tau.array() = (desiredposition.array()-position.array())*Kp.array();
-  tau.array() = (desiredvelocity.array()-velocity.array())*Kd.array();
+  positionError.array() = desiredposition.array()-position.array();  
+  velocityError.array() = desiredvelocity.array()-velocity.array();
 
+  tau.array() = positionError.array()*Kp.array() 
+              + velocityError.array()*Kd.array();
   
   sotDEBUGOUT(15);
  // std::cout << " tau " << tau << std::endl;
@@ -119,3 +124,6 @@ computeControl( dynamicgraph::Vector &tau, int t )
   return tau;
 
 }
+
+
+
