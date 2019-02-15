@@ -111,6 +111,7 @@ computeControl( dynamicgraph::Vector &tau, int t )
 
   tau.array() = (desiredposition.array()-position.array())*Kp.array();
   tau.array() = (desiredvelocity.array()-velocity.array())*Kd.array();
+
   
   sotDEBUGOUT(15);
  // std::cout << " tau " << tau << std::endl;
